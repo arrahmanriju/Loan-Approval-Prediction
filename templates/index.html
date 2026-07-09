@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f2f5f9;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
+
+        .container{
+            width:900px;
+            background:white;
+            padding:35px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+        }
+
+        h1{
+            text-align:center;
+            color:#2c3e50;
+            margin-bottom:30px;
+        }
+
+        form{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+        }
+
+        .input-box{
+            display:flex;
+            flex-direction:column;
+        }
+
+        label{
+            margin-bottom:6px;
+            font-weight:bold;
+            color:#333;
+        }
+
+        input,
+        select{
+            padding:10px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:15px;
+        }
+
+        input:focus,
+        select:focus{
+            outline:none;
+            border-color:#007BFF;
+        }
+
+        .btn{
+            grid-column:1/3;
+            padding:14px;
+            border:none;
+            background:#007BFF;
+            color:white;
+            font-size:18px;
+            border-radius:8px;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .btn:hover{
+            background:#0056b3;
+        }
+
+        .result{
+            margin-top:30px;
+            text-align:center;
+        }
+
+        .approved{
+            color:green;
+            font-size:28px;
+            font-weight:bold;
+        }
+
+        .rejected{
+            color:red;
+            font-size:28px;
+            font-weight:bold;
+        }
+
+        .confidence{
+            margin-top:10px;
+            color:#555;
+            font-size:18px;
+        }
+
+        @media(max-width:768px){
+
+            form{
+                grid-template-columns:1fr;
+            }
+
+            .btn{
+                grid-column:1;
+            }
+
+            .container{
+                width:100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Loan Approval Prediction System</h1>
+
+<form action="/predict" method="POST">
+
+<div class="input-box">
+<label>Age</label>
+<input type="number" name="age" required>
+</div>
+
+<div class="input-box">
+<label>Gender</label>
+<select name="gender" required>
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+</div>
+
+<div class="input-box">
+<label>Education</label>
+<select name="education">
+
+<option value="Associate">Associate</option>
+<option value="Bachelor">Bachelor</option>
+<option value="Master">Master</option>
+<option value="Doctorate">Doctorate</option>
+<option value="High School">High School</option>
+
+</select>
+</div>
+
+<div class="input-box">
+<label>Person Income</label>
+<input type="number" name="income" required>
+</div>
+
+<div class="input-box">
+<label>Employee Experience</label>
+<input type="number" name="experience" required>
+</div>
+
+<div class="input-box">
+<label>Home Ownership</label>
+
+<select name="home">
+
+<option value="MORTGAGE">Mortgage</option>
+<option value="OWN">Own</option>
+<option value="RENT">Rent</option>
+<option value="OTHER">Other</option>
+
+</select>
+
+</div>
+
+<div class="input-box">
+<label>Loan Amount</label>
+<input type="number" name="loan_amount" required>
+</div>
+
+<div class="input-box">
+
+<label>Loan Intent</label>
+
+<select name="intent">
+
+<option value="DEBTCONSOLIDATION">Debt Consolidation</option>
+<option value="EDUCATION">Education</option>
+<option value="HOMEIMPROVEMENT">Home Improvement</option>
+<option value="MEDICAL">Medical</option>
+<option value="PERSONAL">Personal</option>
+<option value="VENTURE">Venture</option>
+
+</select>
+
+</div>
+
+<div class="input-box">
+<label>Loan Interest Rate</label>
+<input type="number" step="0.01" name="interest_rate" required>
+</div>
+
+<div class="input-box">
+<label>Loan Percentage</label>
+<input type="number" step="0.01" name="loan_percentage" required>
+</div>
+
+<div class="input-box">
+<label>Credit History</label>
+<input type="number" name="credit_history" required>
+</div>
+
+<div class="input-box">
+<label>Credit Score</label>
+<input type="number" name="credit_score" required>
+</div>
+
+<div class="input-box">
+<label>Previous Loan</label>
+
+<select name="previous_loan">
+
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+
+</select>
+
+</div>
+
+<button class="btn" type="submit">
+Predict Loan Status
+</button>
+
+</form>
+
+{% if prediction %}
+
+<div class="result">
+
+{% if prediction == "Loan Approved" %}
+
+<p class="approved">
+{{ prediction }}
+</p>
+
+{% elif prediction == "Loan Rejected" %}
+
+<p class="rejected">
+{{ prediction }}
+</p>
+
+{% else %}
+
+<p style="color:red;">
+{{ prediction }}
+</p>
+
+{% endif %}
+
+{% if confidence %}
+
+<p class="confidence">
+Confidence : {{ confidence }} %
+</p>
+
+{% endif %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
