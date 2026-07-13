@@ -1,11 +1,14 @@
+from pathlib import Path
+
 from flask import Flask, render_template, request
 import pandas as pd
 from xgboost import XGBClassifier
 
 app = Flask(__name__)
 
+BASE_DIR = Path(__file__).resolve().parent
 model = XGBClassifier()
-model.load_model("model.json")
+model.load_model(BASE_DIR / "model.json")
 
 @app.route("/")
 def home():
