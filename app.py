@@ -1,7 +1,7 @@
 from pathlib import Path
 
+import numpy as np
 from flask import Flask, render_template, request
-import pandas as pd
 from xgboost import XGBClassifier
 
 app = Flask(__name__)
@@ -112,41 +112,37 @@ def predict():
         elif intent == "VENTURE":
             data["Loan Intent_VENTURE"] = 1
 
-        # ==========================
-        # Create DataFrame
-        # ==========================
         feature_order = [
-            'Age',
-            'Gender',
-            'Person Income',
-            'Employee Experience',
-            'Loan Amount',
-            'Loan interest Rate',
-            'Loan percentage',
-            'Credit History',
-            'Credit Score',
-            'Previous Loan',
-            'Education_Bachelor',
-            'Education_Doctorate',
-            'Education_High School',
-            'Education_Master',
-            'Home Onwership_OTHER',
-            'Home Onwership_OWN',
-            'Home Onwership_RENT',
-            'Loan Intent_EDUCATION',
-            'Loan Intent_HOMEIMPROVEMENT',
-            'Loan Intent_MEDICAL',
-            'Loan Intent_PERSONAL',
-            'Loan Intent_VENTURE'
+            "Age",
+            "Gender",
+            "Person Income",
+            "Employee Experience",
+            "Loan Amount",
+            "Loan interest Rate",
+            "Loan percentage",
+            "Credit History",
+            "Credit Score",
+            "Previous Loan",
+            "Education_Bachelor",
+            "Education_Doctorate",
+            "Education_High School",
+            "Education_Master",
+            "Home Onwership_OTHER",
+            "Home Onwership_OWN",
+            "Home Onwership_RENT",
+            "Loan Intent_EDUCATION",
+            "Loan Intent_HOMEIMPROVEMENT",
+            "Loan Intent_MEDICAL",
+            "Loan Intent_PERSONAL",
+            "Loan Intent_VENTURE",
         ]
 
-        input_df = pd.DataFrame([data])
-        input_df = input_df[feature_order]
+        input_array = np.array([[data[col] for col in feature_order]])
 
         # ==========================
         # Prediction
         # ==========================
-        prediction = model.predict(input_df)[0]
+        prediction = model.predict(input_array)[0]
 
         if prediction == 1:
             result = "Loan Approved"
@@ -156,7 +152,7 @@ def predict():
         # Optional probability
         confidence = None
         if hasattr(model, "predict_proba"):
-            confidence = round(model.predict_proba(input_df)[0].max() * 100, 2)
+            confidence = round(model.predict_proba(input_array)[0].max() * 100, 2)
 
         return render_template(
             "index.html",
